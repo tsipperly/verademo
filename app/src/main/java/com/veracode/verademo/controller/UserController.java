@@ -351,7 +351,7 @@ public class UserController {
 		}
 
 		Connection connect = null;
-		Statement sqlStatement = null;
+		PreparedStatement sqlStatement = null;
 
 		try {
 			// Get the Database Connection
@@ -369,11 +369,12 @@ public class UserController {
 			query.append("'" + md5(password) + "',");
 			query.append("'" + mysqlCurrentDateTime + "',");
 			query.append("'" + realName + "',");
-			query.append("'" + blabName + "'");
+			query.append();
 			query.append(");");
 
-			sqlStatement = connect.createStatement();
-			sqlStatement.execute(query.toString());
+			sqlStatement = connect.prepareStatement(query.toString());
+			sqlStatement.setString(1, blabName);
+			sqlStatement.execute();
 			logger.info(query.toString());
 			/* END EXAMPLE VULNERABILITY */
 
