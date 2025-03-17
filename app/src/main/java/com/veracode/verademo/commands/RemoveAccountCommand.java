@@ -44,7 +44,7 @@ public class RemoveAccountCommand implements BlabberCommand {
 
 			/* START EXAMPLE VULNERABILITY */
 			String event = "Removed account for blabber " + result.getString(1);
-			sqlQuery = "INSERT INTO users_history (blabber, event) VALUES ('" + blabberUsername + "', '" + event + "')";
+			sqlQuery = "INSERT INTO users_history (blabber, event) VALUES (" + connect.createStatement().enquoteLiteral(String.valueOf(blabberUsername)) + ", '" + event + "')";
 			logger.info(sqlQuery);
 			sqlStatement.execute(sqlQuery);
 
