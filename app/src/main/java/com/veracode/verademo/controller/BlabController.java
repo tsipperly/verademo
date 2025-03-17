@@ -451,7 +451,7 @@ public class BlabController {
 				+ " SUM(if(listeners.listener=?, 1, 0)) as listeners,"
 				+ " SUM(if(listeners.status='Active',1,0)) as listening"
 				+ " FROM users LEFT JOIN listeners ON users.username = listeners.blabber"
-				+ " WHERE users.username NOT IN (\"admin\",?)" + " GROUP BY users.username" + " ORDER BY " + sort + ";";
+				+ " WHERE users.username NOT IN (\"admin\",?)" + " GROUP BY users.username" + " ORDER BY ?;";
 
 		try {
 			logger.info("Getting Database connection");
@@ -464,6 +464,15 @@ public class BlabController {
 			blabberQuery = connect.prepareStatement(blabbersSql);
 			blabberQuery.setString(1, username);
 			blabberQuery.setString(2, username);
+			try {
+			    blabberQuery.setInt(3, Math.round(Float.parseFloat(sort)));
+			} catch (NumberFormatException e) {
+			    logger.error("mobb-d890ddc73aa05690d07c5d2d5a1bcb10: Failed to convert input to type integer");
+
+			    // MOBB: using a default value for the SQL parameter in case the input is not convertible.
+			    // This is important for preventing users from causing a denial of service to this application by throwing an exception here.
+			    blabberQuery.setInt(3, 0);
+			}
 			ResultSet blabbersResults = blabberQuery.executeQuery();
 			/* END EXAMPLE VULNERABILITY */
 
