@@ -147,7 +147,7 @@ public class UserController {
 		}
 
 		Connection connect = null;
-		Statement sqlStatement = null;
+		PreparedStatement sqlStatement = null;
 
 		try {
 			// Get the Database Connection
@@ -158,11 +158,11 @@ public class UserController {
 			/* START EXAMPLE VULNERABILITY */
 			// Execute the query
 			logger.info("Creating the Statement");
-			String sqlQuery = "select username, password, password_hint, created_at, last_login, real_name, blab_name from users where username='"
-					+ username + "' and password='" + md5(password) + "';";
-			sqlStatement = connect.createStatement();
+			String sqlQuery = "select username, password, password_hint, created_at, last_login, real_name, blab_name from users where username=? and password='" + md5(password) + "';";
+			sqlStatement = connect.prepareStatement(sqlQuery);
 			logger.info("Execute the Statement");
-			ResultSet result = sqlStatement.executeQuery(sqlQuery);
+			sqlStatement.setString(1, username);
+			ResultSet result = sqlStatement.executeQuery();
 			/* END EXAMPLE VULNERABILITY */
 
 			// Did we find exactly 1 user that matched?
