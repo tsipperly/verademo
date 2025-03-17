@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -50,7 +51,7 @@ public class ToolsController {
 
 		try {
 			/* START EXAMPLE VULNERABILITY */
-			proc = Runtime.getRuntime().exec(new String[] { "bash", "-c", "ping -c1 " + host });
+			proc = Runtime.getRuntime().exec(new String[] { "bash", "-c", "ping -c1 " + StringEscapeUtils.escapeXSI(host) });
 			/* END EXAMPLE VULNERABILITY */
 
 			proc.waitFor(5, TimeUnit.SECONDS);
